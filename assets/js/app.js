@@ -10,6 +10,11 @@ const formSubmitButton = form.querySelector('button.primary')
 // define o elemento table
 const table = document.querySelector('table')
 
+/**
+ * Função para exibir detalhes em janela modal
+ * @param id
+ * @returns {Promise<void>}
+ */
 const viewEvent = async (id) => {
   const event = await getEventData(id)
 
@@ -113,6 +118,11 @@ const fetchJson = async (url, data, method = 'POST') => {
   // retorna a resposta
   return response
 }
+
+const generateButton = ({title, action, icon, classes = 'btn'}) => {
+  return `<button class='btn ${classes}' title='Ver ${title}' onclick='${action}'>${icon}</button>`
+}
+
 /**
  * Função pra gerar linhas de uma tabela
  * @param data
@@ -143,14 +153,35 @@ const generateTableRows = (data) => {
       row.insertCell(key).innerHTML = rowData[cellsOrder[key]]
     }
 
-    // insere mais uma célula com botão de visualizar
-    row.insertCell().innerHTML = `<button class='btn edit' title='Ver ${rowData.event}' onclick='viewEvent("${rowData.id}")'>V</button>`
+    // define propriedades dos botões
+    const buttons = [
+      // botão de visualizar
+      {
+        title  : `Ver ${rowData.event}`,
+        classes: 'edit',
+        icon   : 'V',
+        action : `viewEvent("${rowData.id}")`,
+      },
+      // botão de editar
+      {
+        title  : `Editar ${rowData.event}`,
+        classes: 'edit',
+        icon   : 'E',
+        action : `editEvent("${rowData.id}")`,
+      },
+      // botão de excluir
+      {
+        title  : `Excluir ${rowData.event}`,
+        classes: 'delete',
+        icon   : '&times;',
+        action : `deleteEvent("${rowData.id}")`,
+      },
+    ]
 
-    // insere mais uma célula com botão de editar
-    row.insertCell().innerHTML = `<button class='btn edit' title='Editar ${rowData.event}' onclick='editEvent("${rowData.id}")'>E</button>`
-
-    // insere mais uma célula com botão de deletar
-    row.insertCell().innerHTML = `<button class='btn delete' title='Excluir ${rowData.event}' onclick='deleteEvent("${rowData.id}")'>&times;</button>`
+    // insere mais uma célula para cada botão
+    for (const button of buttons) {
+      row.insertCell().innerHTML = generateButton(button)
+    }
 
     container.append(row)
   }

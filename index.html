@@ -8,49 +8,57 @@
   <link rel='stylesheet' href='assets/css/style.css'>
 </head>
 <body>
-<main>
-  <h1 class='fw-light'>Get and send date from MySQL</h1>
-
-  <form action='save'>
-    <div class='row bg-primary'>
-      <div style='width: 50%'>
-        <label>Event</label>
-        <input type='text' name='event' required autofocus>
+<div class='app'>
+  <header>HEADER</header>
+  <main>
+    <h1 class='fw-light'>Get and send date from MySQL</h1>
+    <form action='save'>
+      <div class='row bg-primary'>
+        <div style='width: 50%'>
+          <label>Event</label>
+          <input type='text' name='event' required autofocus>
+        </div>
+        <div>
+          <label>Date</label>
+          <input type='date' name='date' required>
+        </div>
+        <div class='ms-auto'>
+          <label>&nbsp;</label>
+          <button type='reset' class="btn">Reset</button>
+        </div>
+        <div>
+          <label>&nbsp;</label>
+          <button class="btn primary">Salvar</button>
+        </div>
       </div>
-      <div>
-        <label>Date</label>
-        <input type='date' name='date' required>
-      </div>
-      <div class='ms-auto'>
-        <label>&nbsp;</label>
-        <button type='reset' class="btn">Reset</button>
-      </div>
-      <div>
-        <label>&nbsp;</label>
-        <button class="btn primary">Salvar</button>
-      </div>
+    </form>
+    <h3 class='fw-light'>Registered Events</h3>
+    <div class='responsive-table'>
+      <table>
+        <thead>
+        <tr>
+          <th>id</th>
+          <th>event</th>
+          <th>date</th>
+          <th colspan='3'>actions</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
     </div>
-  </form>
-  <h3 class='fw-light'>Registered Events</h3>
-  <div class='card'>
-    <table>
-      <thead>
-      <tr>
-        <th>id</th>
-        <th>event</th>
-        <th>date</th>
-        <th colspan='3'>actions</th>
-      </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </div>
-</main>
+  </main>
+  <footer>
+    <div class='text-end ms-auto'>
+      <small>by @washalbano</small>
+    </div>
+  </footer>
+</div>
 <div class='modal'>
   <div class='modal-container card'>
-    <div class='modal-header text-end'><button title='fechar modal'>&times;</button></div>
-    <div class='modal-body'>
+    <div class='modal-header text-end'>
+      <button title='fechar modal'>&times;</button>
     </div>
+    <div class='modal-body'></div>
   </div>
   <div class='modal-backdrop'></div>
 </div>
