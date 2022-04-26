@@ -1,8 +1,7 @@
-// define o elemento recebedor de mensagems
-const messenger = document.querySelector('div.messenger')
-
 // define o elemento modal
 const modal = document.querySelector('div.modal')
+// define o corpo da modal
+const modalBody = modal.querySelector('div.modal-body')
 
 // define o elemento form
 const form = document.querySelector('form')
@@ -10,6 +9,23 @@ const formSubmitButton = form.querySelector('button.primary')
 
 // define o elemento table
 const table = document.querySelector('table')
+
+const viewEvent = async (id) => {
+  const event = await getEventData(id)
+
+  // alimenta a modal com conteúdo
+  modalBody.innerHTML = `
+  <h3>${event.event}</h3>
+  <div>
+    <h1 class='fw-light m-0'>${dateBR(event.date)}</h1>
+    <small class='d-block text-primary'>${fullTextDate(event.date)}</small>
+  </div>
+  <small class='d-block text-secondary'>Evento criado em: ${event.created_at}</small>
+  `
+  modalBody.classList.add('text-center')
+  // exibe a modal
+  modal.style.display = 'flex'
+}
 
 /**
  * Função pra buscar evento por id
@@ -21,7 +37,7 @@ const getEventData = async (id) => {
 
   // se a resposta tiver um índice error
   if (response.hasOwnProperty('error')) {
-    messenger.innerHTML = response.error
+    modalBody.innerHTML = response.error
     modal.style.display = 'flex'
   } else {
     return response[0]
@@ -104,7 +120,7 @@ const fetchJson = async (url, data, method = 'POST') => {
  */
 const generateTableRows = (data) => {
   // define a ordem dos dados
-  const cellsOrder = ['id', 'event', 'date', 'created_at']
+  const cellsOrder = ['id', 'event', 'date']
 
   // cria um elemento container
   const container = document.createElement('div')
@@ -127,11 +143,14 @@ const generateTableRows = (data) => {
       row.insertCell(key).innerHTML = rowData[cellsOrder[key]]
     }
 
+    // insere mais uma célula com botão de visualizar
+    row.insertCell().innerHTML = `<button class='btn edit' title='Ver ${rowData.event}' onclick='viewEvent("${rowData.id}")'>V</button>`
+
     // insere mais uma célula com botão de editar
-    row.insertCell().innerHTML = `<button class='btn edit' title='Editar ${rowData.event}' onclick='editEvent("${rowData.id}")'>Editar</button>`
+    row.insertCell().innerHTML = `<button class='btn edit' title='Editar ${rowData.event}' onclick='editEvent("${rowData.id}")'>E</button>`
 
     // insere mais uma célula com botão de deletar
-    row.insertCell().innerHTML = `<button class='btn delete' title='Deletar ${rowData.event}' onclick='deleteEvent("${rowData.id}")'>Deletar</button>`
+    row.insertCell().innerHTML = `<button class='btn delete' title='Excluir ${rowData.event}' onclick='deleteEvent("${rowData.id}")'>&times;</button>`
 
     container.append(row)
   }
@@ -163,9 +182,9 @@ form.addEventListener('submit', async (e) => {
 
   // se a resposta tiver um índice error
   if (response.hasOwnProperty('error')) {
-    messenger.innerHTML = response.error
+    modalBody.innerHTML = response.error
   } else {
-    messenger.innerHTML = response.success
+    modalBody.innerHTML = response.success
     // exibe a modal
     modal.style.display = 'flex'
     // atualiza a tabela
@@ -189,7 +208,9 @@ const renderTableData = async () => {
 
   // se a resposta tiver um índice error
   if (response.hasOwnProperty('error')) {
-    messenger.innerHTML = response.error
+    modalBody.innerHTML = response.error
+    // exibe a modal
+    modal.style.display = 'flex'
   } else {
     // alimenta o tBody com os dados da resposta
     table.querySelector('tbody').innerHTML = generateTableRows(response)
