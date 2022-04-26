@@ -34,10 +34,11 @@ main {
   align-items: center;
 }
 
-.app > header{
+.app > header {
   background-color: #fafafa;
   box-shadow: 0 1px 5px rgba(0, 0, 0, .15)
 }
+
 .app > footer {
   background-color: #ebedef;
   box-shadow: 0 -1px 5px rgba(0, 0, 0, .15)
@@ -204,7 +205,11 @@ button {
 .modal .modal-container {
   position: relative;
   z-index: 60;
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, .35)
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, .35);
+}
+
+.modal-body{
+  padding: 12px;
 }
 
 form[data-edit] button.primary {
