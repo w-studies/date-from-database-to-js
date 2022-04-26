@@ -1,5 +1,5 @@
-<sup><sub>Project created to show how to pass data from javascript to php, then to mysql and vice versa.</sub></sup><br>
-<sup><sub>It also demonstrates how to display details with html formatting in a modal window.</sub></sup>
+<sup>Project created to demonstrate how to pass data from javascript to php, then to mysql and vice versa.</sup><br>
+<sup>It also demonstrates how to display details with html formatting in a modal window.</sup>
 
 ## Getting started
 
