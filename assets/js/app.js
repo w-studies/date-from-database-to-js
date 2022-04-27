@@ -25,7 +25,7 @@ const viewEvent = async (id) => {
     <h1 class='fw-light m-0'>${dateBR(event.date)}</h1>
     <small class='d-block text-primary'>${fullTextDate(event.date)}</small>
   </div>
-  <small class='d-block text-secondary'>Evento criado em: ${event.created_at}</small>
+  <small class='d-block text-secondary mt-3'>Evento criado em: ${event.created_at}</small>
   `
   modalBody.classList.add('text-center')
   // exibe a modal

@@ -13,8 +13,8 @@
   <main>
     <h1 class='fw-light'>Get and send date from MySQL</h1>
     <form action='save'>
-      <div class='row bg-primary'>
-        <div style='width: 50%'>
+      <div class='row bg-primary col-sm-6'>
+        <div style='width: 80%'>
           <label>Event</label>
           <input type='text' name='event' required autofocus>
         </div>
@@ -22,12 +22,12 @@
           <label>Date</label>
           <input type='date' name='date' required>
         </div>
+      </div>
+      <div class='row'>
         <div class='ms-auto'>
-          <label>&nbsp;</label>
           <button type='reset' class="btn">Reset</button>
         </div>
         <div>
-          <label>&nbsp;</label>
           <button class="btn primary">Salvar</button>
         </div>
       </div>
@@ -49,16 +49,16 @@
   </main>
   <footer>
     <div class='text-end ms-auto'>
-      <small>by @washalbano</small>
+      <small class='text-secondary'>by @washalbano</small>
     </div>
   </footer>
 </div>
 <div class='modal'>
   <div class='modal-container card'>
-    <div class='modal-header text-end'>
-      <button title='fechar modal'>&times;</button>
+    <div class='modal-header text-end me-2'>
+      <button title='fechar modal' class='btn-close'></button>
     </div>
-    <div class='modal-body'></div>
+    <div class='modal-body pt-0'></div>
   </div>
   <div class='modal-backdrop'></div>
 </div>
