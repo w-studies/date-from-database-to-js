@@ -10,6 +10,26 @@ const formSubmitButton = form.querySelector('button.primary')
 // define o elemento table
 const table = document.querySelector('table')
 
+const deleteEvent = async (id) => {
+  const event = await getEventData(id)
+  // alimenta a modal com mensagem
+  modalBody.innerHTML = `
+  <span class='p-2 bg-warning'>Funcionalidade em Desenvolvimento</span>
+  <span class='d-block p-2 text-danger'>Você tem certeza?</span>
+  <small class='text-danger'>Esta ação não poderá ser desfeita.</small>
+  <div class='row'>
+    <div class='ms-auto p-2'>
+      <button class="btn">Cancelar</button>
+    </div>
+    <div class='p-2'>
+      <button class="btn danger">Sim, Excluir</button>
+    </div>
+  </div>
+  `
+  modalBody.classList.add('text-center')
+  // exibe a modal
+  modal.style.display = 'flex'
+}
 /**
  * Função para exibir detalhes em janela modal
  * @param id
