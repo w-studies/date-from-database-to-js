@@ -22,6 +22,8 @@
   --pF: 12px;
 
   --v-buttonBrightFactor: 1.1;
+
+  --headerHight: 60px;
 }
 
 * {
@@ -57,7 +59,7 @@ main {
 .app > footer {
   padding: var(--pF);
   display: flex;
-  height: 60px;
+  height: var(--headerHight);
   width: 100%;
   align-items: center;
 }
@@ -205,7 +207,7 @@ tr:hover td {
 
 .modal {
   position: fixed;
-  top: 0;
+  top: var(--headerHight);
   bottom: 0;
   left: 0;
   right: 0;

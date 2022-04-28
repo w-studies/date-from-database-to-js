@@ -23,6 +23,8 @@ const header = document.querySelector('header')
  */
 const viewLoader = async () => {
 
+  modal.style.display = 'none'
+
   const response = await fetch(`views/${module}.html`)
   const content = await response.text()
 

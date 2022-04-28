@@ -28,7 +28,7 @@
     // verifica se houve alguma falha na execução da query
     if ($sqli->error) {
       // devolve json com a mensagem de erro
-      jsonResponse('<p class="text-danger"><b>ERROR</b>: ' . $sqli->error . '</p><small class="text-secondary">' . __FILE__ . ' at line: ' . __LINE__ . '<small>', 404);
+      jsonResponse('<p class="text-danger"><b>ERROR</b>: ' . $sqli->error . '</p><small class="text-secondary">' . __FILE__ . ' at line: ' . __LINE__ . '<small>', 500);
 
       // se não houve falha
     } elseif ($sqli->affected_rows) {
