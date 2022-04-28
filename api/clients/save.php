@@ -1,6 +1,7 @@
 <?php
   // conecta ao database
-  require 'connection.php';
+  require '../connection.php';
+  require '../helpers/httpResponse.php';
 
   // se algo foi postado
   if (sizeof($_POST)) {
@@ -19,7 +20,7 @@
       $action = 'atualizado';
     }
 
-    $query .= "schedules set event = '$event', date ='$date'$where";
+    $query .= "clients set name = '$name', date ='$date'$where";
 
     // executa a query
     $sqli->query($query);
@@ -27,15 +28,14 @@
     // verifica se houve alguma falha na execução da query
     if ($sqli->error) {
       // devolve json com a mensagem de erro
-      die(json_encode([
-        'error' => 'ERROR: ' . $sqli->error
-      ]));
+      jsonResponse('<p class="text-danger"><b>ERROR</b>: ' . $sqli->error . '</p><small class="text-secondary">' . __FILE__ . ' at line: ' . __LINE__ . '<small>', 404);
 
       // se não houve falha
-    } else {
+    } elseif ($sqli->affected_rows) {
       // devolve mensagem de sucesso
-      die(json_encode([
-        'success' => 'Registro ' . $action . ' com sucesso, chefe!'
-      ]));
+      jsonResponse('Registro ' . $action . ' com sucesso, chefe!');
+    } else {
+      // devolve json com a mensagem de erro
+      jsonResponse('Nada foi alterado, chefe!', 400);
     }
   }

@@ -1,6 +1,7 @@
 <?php
   // conecta ao database
-  require 'connection.php';
+  require '../connection.php';
+  require '../helpers/httpResponse.php';
 
   // define a query de busca
   $query = 'select * from schedules';
@@ -26,13 +27,11 @@
     $data = $result->fetch_all(MYSQLI_ASSOC);
 
     // encerra o script devolvendo um json
-    die(json_encode($data));
+    jsonResponse(['data' => $data]);
 
     // se não houve erro, e nenhum registro foi encontrado
   } else {
     // devolve json com mensagem
-    die(json_encode([
-      'error' => 'Nenhum registro foi encontrado.'
-    ]));
+    jsonResponse('Nenhum registro foi encontrado.', 404);
 
   }

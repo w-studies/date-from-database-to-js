@@ -1,0 +1,35 @@
+<h1 class='fw-light'>Clients</h1>
+<form action='save'>
+  <div class='row bg-primary col-sm-6'>
+    <div style='width: 80%'>
+      <label>Name</label>
+      <input type='text' name='name' required autofocus>
+    </div>
+    <div>
+      <label>Date</label>
+      <input type='date' name='date' required>
+    </div>
+  </div>
+  <div class='row'>
+    <div class='ms-auto'>
+      <button type='reset' class="btn">Reset</button>
+    </div>
+    <div>
+      <button class="btn primary">Salvar</button>
+    </div>
+  </div>
+</form>
+<h3 class='fw-light'>Registered Clients</h3>
+<div class='responsive-table'>
+  <table>
+    <thead>
+    <tr>
+      <th>id</th>
+      <th>name</th>
+      <th>date</th>
+      <th colspan='3'>actions</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>

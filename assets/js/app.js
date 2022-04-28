@@ -1,19 +1,120 @@
+let form, formSubmitButton, table, module = 'events'
+
+// define o elemento stage
+const main = document.querySelector('main')
+
 // define o elemento modal
 const modal = document.querySelector('div.modal')
+
 // define o corpo da modal
 const modalBody = modal.querySelector('div.modal-body')
 
-// define o elemento form
-const form = document.querySelector('form')
-const formSubmitButton = form.querySelector('button.primary')
+modal.querySelector('.modal-header button').addEventListener('click', () => {
+  modal.style.display = 'none'
+})
 
-// define o elemento table
-const table = document.querySelector('table')
+// define o elemento header
+const header = document.querySelector('header')
 
+/**
+ * Função para carregar views
+ * @param view
+ * @returns {Promise<void>}
+ */
+const viewLoader = async () => {
+
+  const response = await fetch(`views/${module}.html`)
+  const content = await response.text()
+
+  main.innerHTML = content
+
+  // define o elemento form
+  form = main.querySelector('form')
+  formSubmitButton = form.querySelector('button.primary')
+
+  // define o elemento table
+  table = main.querySelector('table')
+
+  // ao submeter o form
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault()
+
+    // define o form
+    const form = e.target
+
+    // define os dados do form
+    const fData = new FormData(form)
+
+    if (form.hasAttribute('data-edit')) {
+      fData.append('id', form.dataset.edit)
+    }
+
+    // submete os dados do form
+    const response = await fetchJson(`api/${module}/${form.getAttribute('action')}.php`, fData)
+
+
+    // se response estiver ok
+    if (response.statusCode === 200) {
+      showModal(response.body)
+
+      // atualiza a tabela
+      await renderTableData()
+
+      // reseta o form
+      form.reset()
+    } else {
+      showModal(response.body)
+    }
+
+  })
+  // ao resetar o form
+  form.addEventListener('reset', async (e) => {
+    formSubmitButton.innerText = 'Salvar'
+    form.removeAttribute('data-edit')
+  })
+
+  // carrega os dados para dentro da tabela
+  await renderTableData(table)
+
+}
+
+
+header.addEventListener('click', async (e) => {
+
+  const element = e.target
+
+  if (element.matches('a')) {
+    e.preventDefault()
+
+    module = element.getAttribute('href')
+
+    await viewLoader()
+
+  }
+})
+
+
+/**
+ * Função para exibir modal
+ * @param content
+ */
+const showModal = (content) => {
+  modalBody.innerHTML = content
+  // exibe a modal
+  modal.style.display = 'flex'
+}
+
+/**
+ * Função para deletar um evento
+ * @param id
+ * @returns {Promise<void>}
+ */
 const deleteEvent = async (id) => {
   const event = await getEventData(id)
-  // alimenta a modal com mensagem
-  modalBody.innerHTML = `
+
+  modalBody.classList.add('text-center')
+
+  showModal(`
   <span class='p-2 bg-warning'>Funcionalidade em Desenvolvimento</span>
   <span class='d-block p-2 text-danger'>Você tem certeza?</span>
   <small class='text-danger'>Esta ação não poderá ser desfeita.</small>
@@ -25,10 +126,7 @@ const deleteEvent = async (id) => {
       <button class="btn danger">Sim, Excluir</button>
     </div>
   </div>
-  `
-  modalBody.classList.add('text-center')
-  // exibe a modal
-  modal.style.display = 'flex'
+  `)
 }
 /**
  * Função para exibir detalhes em janela modal
@@ -38,18 +136,17 @@ const deleteEvent = async (id) => {
 const viewEvent = async (id) => {
   const event = await getEventData(id)
 
+  modalBody.classList.add('text-center')
+
   // alimenta a modal com conteúdo
-  modalBody.innerHTML = `
+  showModal(`
   <h3>${event.event}</h3>
   <div>
     <h1 class='fw-light m-0'>${dateBR(event.date)}</h1>
     <small class='d-block text-primary'>${fullTextDate(event.date)}</small>
   </div>
   <small class='d-block text-secondary mt-3'>Evento criado em: ${event.created_at}</small>
-  `
-  modalBody.classList.add('text-center')
-  // exibe a modal
-  modal.style.display = 'flex'
+  `)
 }
 
 /**
@@ -58,14 +155,13 @@ const viewEvent = async (id) => {
  * @returns {Promise<*>}
  */
 const getEventData = async (id) => {
-  const response = await fetchJson(`api/?id=${id}`, '', 'GET')
+  const response = await fetchJson(`api/${module}/?id=${id}`, '', 'GET')
 
-  // se a resposta tiver um índice error
-  if (response.hasOwnProperty('error')) {
-    modalBody.innerHTML = response.error
-    modal.style.display = 'flex'
+  // se response estiver ok
+  if (response.statusCode === 200) {
+    return response.body.data[0]
   } else {
-    return response[0]
+    showModal(response.body)
   }
 }
 
@@ -75,6 +171,8 @@ const getEventData = async (id) => {
  */
 const editEvent = async (id) => {
   const event = await getEventData(id)
+
+  if (!event) return
 
   const data = ['event', 'date']
 
@@ -133,10 +231,10 @@ const fetchJson = async (url, data, method = 'POST') => {
   const request = await fetch(url, headers)
 
   // converte o resultado da request em json
-  const response = await request.json()
+  const body = await request.json()
 
   // retorna a resposta
-  return response
+  return {statusCode: request.status, body}
 }
 
 const generateButton = ({title, action, icon, classes = 'btn'}) => {
@@ -174,29 +272,16 @@ const generateTableRows = (data) => {
     }
 
     // define propriedades dos botões
-    const buttons = [
-      // botão de visualizar
+    const buttons = [// botão de visualizar
       {
-        title  : `Ver ${rowData.event}`,
-        classes: 'edit',
-        icon   : 'V',
-        action : `viewEvent("${rowData.id}")`,
-      },
-      // botão de editar
+        title: `Ver ${rowData.event}`, classes: 'edit', icon: 'V', action: `viewEvent("${rowData.id}")`,
+      }, // botão de editar
       {
-        title  : `Editar ${rowData.event}`,
-        classes: 'edit',
-        icon   : 'E',
-        action : `editEvent("${rowData.id}")`,
-      },
-      // botão de excluir
+        title: `Editar ${rowData.event}`, classes: 'edit', icon: 'E', action: `editEvent("${rowData.id}")`,
+      }, // botão de excluir
       {
-        title  : `Excluir ${rowData.event}`,
-        classes: 'delete',
-        icon   : '&times;',
-        action : `deleteEvent("${rowData.id}")`,
-      },
-    ]
+        title: `Excluir ${rowData.event}`, classes: 'delete', icon: '&times;', action: `deleteEvent("${rowData.id}")`,
+      }]
 
     // insere mais uma célula para cada botão
     for (const button of buttons) {
@@ -210,67 +295,26 @@ const generateTableRows = (data) => {
   return container.innerHTML
 }
 
-modal.querySelector('.modal-header button').addEventListener('click', () => {
-  modal.style.display = 'none'
-})
-
-// ao submeter o form
-form.addEventListener('submit', async (e) => {
-  e.preventDefault()
-
-  // define o form
-  const form = e.target
-
-  // define os dados do form
-  const fData = new FormData(form)
-
-  if (form.hasAttribute('data-edit')) {
-    fData.append('id', form.dataset.edit)
-  }
-
-  // submete os dados do form
-  const response = await fetchJson(`api/${form.getAttribute('action')}.php`, fData)
-
-  // se a resposta tiver um índice error
-  if (response.hasOwnProperty('error')) {
-    modalBody.innerHTML = response.error
-  } else {
-    modalBody.innerHTML = response.success
-    // exibe a modal
-    modal.style.display = 'flex'
-    // atualiza a tabela
-    await renderTableData()
-
-    // reseta o form
-    form.reset()
-  }
-
-})
-// ao resetar o form
-form.addEventListener('reset', async (e) => {
-  formSubmitButton.innerText = 'Salvar'
-  form.removeAttribute('data-edit')
-})
-
-// função para renderizar os dados na tabela
+/**
+ * Função para renderizar os dados na tabela
+ * @returns {Promise<void>}
+ */
 const renderTableData = async () => {
   // submete um request para buscar os registros
-  const response = await fetchJson('api/', '', 'GET')
+  const response = await fetchJson(`api/${module}/`, '', 'GET')
 
-  // se a resposta tiver um índice error
-  if (response.hasOwnProperty('error')) {
-    modalBody.innerHTML = response.error
-    // exibe a modal
-    modal.style.display = 'flex'
-  } else {
+  // se response estiver ok
+  if (response.statusCode === 200) {
     // alimenta o tBody com os dados da resposta
-    table.querySelector('tbody').innerHTML = generateTableRows(response)
+    table.querySelector('tbody').innerHTML = generateTableRows(response.body.data)
+  } else {
+    showModal(response.body)
   }
 }
 
 
 // assim q o html for carregado
 document.addEventListener('DOMContentLoaded', async (e) => {
-  // carrega os dados para dentro da tabela
-  await renderTableData()
+  // carrega a página inicial
+  await viewLoader('events')
 })
