@@ -1,12 +1,12 @@
 <?php
   // conecta ao database
   require '../connection.php';
-  require '../helpers/httpResponse.php';
 
   // se algo foi postado
   if (sizeof($_POST)) {
     // extrai as variáveis em $_POST
-    extract($_POST);
+    $event = $sqli->real_escape_string($_POST['event']);
+    $date  = $sqli->real_escape_string($_POST['date']);
 
 
     // monta a query de inserção/update

@@ -1,7 +1,6 @@
 <?php
   // conecta ao database
   require '../connection.php';
-  require '../helpers/httpResponse.php';
 
   // define a query de busca
   $query = 'select * from schedules';

@@ -9,7 +9,9 @@ const modal = document.querySelector('div.modal')
 // define o corpo da modal
 const modalBody = modal.querySelector('div.modal-body')
 
-modal.querySelector('.modal-header button').addEventListener('click', () => {
+const modalCloseButton = modal.querySelector('.modal-header button')
+
+modalCloseButton.addEventListener('click', () => {
   modal.style.display = 'none'
 })
 
@@ -232,11 +234,15 @@ const fetchJson = async (url, data, method = 'POST') => {
   // faz o request
   const request = await fetch(url, headers)
 
-  // converte o resultado da request em json
-  const body = await request.json()
+  if (request.status == 200) {
+    // converte o resultado da request em json
+    const body = await request.json()
 
-  // retorna a resposta
-  return {statusCode: request.status, body}
+    // retorna a resposta
+    return {statusCode: request.status, body}
+  } else {
+    return {statusCode: 404, body: await request.text()}
+  }
 }
 
 const generateButton = ({title, action, icon, classes = 'btn'}) => {
@@ -302,9 +308,13 @@ const generateTableRows = (data) => {
  * @returns {Promise<void>}
  */
 const renderTableData = async () => {
+  modalCloseButton.style.display = 'none'
+  showModal('<p>Loading data...</p>')
   // submete um request para buscar os registros
   const response = await fetchJson(`api/${module}/`, '', 'GET')
 
+  modalCloseButton.style.display = 'block'
+  modal.style.display = 'none'
   // se response estiver ok
   if (response.statusCode === 200) {
     // alimenta o tBody com os dados da resposta

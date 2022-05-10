@@ -26,5 +26,5 @@
     header('Status: ' . $status[$code]);
 
     // return the encoded json
-    die(json_encode($data));
+    die(is_array($data) ? json_encode($data) : $data);
   }
