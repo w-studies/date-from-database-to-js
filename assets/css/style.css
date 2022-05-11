@@ -66,7 +66,9 @@ main {
 
 .app > header {
   background-color: var(--c-almostWhite);
-  box-shadow: 0 1px 5px var(--c-shadow15)
+  box-shadow: 0 1px 5px var(--c-shadow15);
+  position: fixed;
+  top: 0;
 }
 
 .app > footer {

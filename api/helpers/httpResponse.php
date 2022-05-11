@@ -23,8 +23,8 @@
     ];
 
     // ok, validation error, or failure
-    header('Status: ' . $status[$code]);
+    // header('Status: ' . $status[$code]);
 
     // return the encoded json
-    die(is_array($data) ? json_encode($data) : $data);
+    die(is_array($data) ? json_encode($data) : '"'.$data.'"');
   }

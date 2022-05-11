@@ -70,7 +70,9 @@ const viewLoader = async () => {
       showModal(response.body)
     }
 
+    return false
   })
+
   // ao resetar o form
   form.addEventListener('reset', async (e) => {
     formSubmitButton.innerText = 'Salvar'

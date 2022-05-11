@@ -5,8 +5,10 @@
   // se algo foi postado
   if (sizeof($_POST)) {
     // extrai as variáveis em $_POST
-    $name = $sqli->real_escape_string($_POST['name']);
-    $date = $sqli->real_escape_string($_POST['date']);
+    extract($_POST);
+    $name = $sqli->real_escape_string($name);
+    $date = $sqli->real_escape_string($date);
+    $id   = (int)$id;
 
 
     // monta a query de inserção/update
