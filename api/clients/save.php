@@ -8,7 +8,6 @@
     extract($_POST);
     $name = $sqli->real_escape_string($name);
     $date = $sqli->real_escape_string($date);
-    $id   = (int)$id;
 
 
     // monta a query de inserção/update
