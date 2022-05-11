@@ -16,6 +16,8 @@ create table schedules
 ) Engine = InnoDB;
 
 insert into schedules(event, date)
-values ('Comemorações de Abril', '2022-04-04 08:00:00'),
-       ('Homenagem às Mães', '2022-05-05 12:00:00'),
-       ('Exposição Agropecuária', '2022-06-06 22:00:00');
+-- exemplo de escape com double single quotes
+values ('Comemorações D''água de Abril', '2022-04-04 08:00:00'),
+       -- exemplo de escape com backslashes
+       ('Homenagem \'às\' Mães', '2022-05-05 12:00:00'),
+       ('Exposição "Agropecuária"', '2022-06-06 22:00:00');
