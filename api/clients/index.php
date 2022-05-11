@@ -18,7 +18,7 @@
   // verifica se houve alguma falha na execução da query
   if ($sqli->error) {
     // se houve alguma falha, exibe mensagem:
-    jsonResponse('<p class="text-danger"><b>Falha na conexão</b>: ' . $sqli->error . '</p><small class="text-secondary">' . __FILE__ . ' at line: ' . __LINE__.'<small>', 500);
+    jsonResponse('<p class="text-danger"><b>Falha na conexão</b>: ' . $sqli->error . '</p>', 500);
 
     // se não houve falha e algum registro foi encontrado
   } elseif ($result->num_rows) {

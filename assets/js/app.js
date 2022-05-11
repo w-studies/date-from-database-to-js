@@ -78,10 +78,8 @@ const viewLoader = async () => {
     formSubmitButton.innerText = 'Salvar'
     form.removeAttribute('data-edit')
   })
-
   // carrega os dados para dentro da tabela
   await renderTableData(table)
-
 }
 
 
@@ -216,6 +214,16 @@ const dateSQL = (date) => {
     month: 'numeric', day: 'numeric', year: 'numeric',
   })
 }
+
+const clearDoubleQuotes = string => {
+  // se o corpo da mensagem for uma double quoted json string
+  if (string.length >= 2 && string.charAt(0) == '"' && string.charAt(string.length - 1) == '"') {
+    // remove as aspas duplas
+    string = string.slice(1, string.length - 1)
+  }
+
+  return string
+}
 /**
  * Funçõo para submeter requests a um servidor, esperendo json como resposta
  * @param url
@@ -233,18 +241,30 @@ const fetchJson = async (url, data, method = 'POST') => {
     headers.body = data
   }
 
+  const retorno = {
+    statusCode: 404,
+    body      : 'not found',
+  }
+
   // faz o request
   const request = await fetch(url, headers)
 
-  if (request.status == 200) {
+  if (request.status === 200 && request.headers.get('content-type').includes('json')) {
     // converte o resultado da request em json
     const body = await request.json()
+    // define retorno da resposta
+    retorno.statusCode = request.status
+    retorno.body = clearDoubleQuotes(body)
 
-    // retorna a resposta
-    return {statusCode: request.status, body}
   } else {
-    return {statusCode: 404, body: await request.text()}
+
+    const body = await request.text()
+    // define retorno
+    retorno.statusCode = request.status == 200 ? 400 : request.status
+    retorno.body = clearDoubleQuotes(body)
   }
+
+  return retorno
 }
 
 const generateButton = ({title, action, icon, classes = 'btn'}) => {
@@ -314,9 +334,9 @@ const renderTableData = async () => {
   showModal('<p>Loading data...</p>')
   // submete um request para buscar os registros
   const response = await fetchJson(`api/${module}/`, '', 'GET')
-
   modalCloseButton.style.display = 'block'
   modal.style.display = 'none'
+
   // se response estiver ok
   if (response.statusCode === 200) {
     // alimenta o tBody com os dados da resposta

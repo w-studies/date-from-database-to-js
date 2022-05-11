@@ -23,8 +23,18 @@
     ];
 
     // ok, validation error, or failure
-    // header('Status: ' . $status[$code]);
+    header('Status: ' . $status[$code]);
 
+    if ($code !== 200) {
+      // guarda os dados do backtrace
+      $debug = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0];
+
+      if (is_array($data)) {
+        $data['debug'] = $debug;
+      } else {
+        $data .= "<small class='text-secondary'><b>FILE</b>: $debug[file], <b>LINE</b>: $debug[line]<small>";
+      }
+    }
     // return the encoded json
-    die(is_array($data) ? json_encode($data) : '"'.$data.'"');
+    die(is_array($data) ? json_encode($data) : '"' . $data . '"');
   }
