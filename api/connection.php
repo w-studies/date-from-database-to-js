@@ -9,7 +9,7 @@
   $database = 'date_studies';   // nome da base de dados
 
 // estabelecer conexão:
-  @$sqli = new mysqli($host, $user, $pass);
+  $sqli = new mysqli($host, $user, $pass);
 
 // verificando se conectou de boas:
   if ($sqli->connect_error) {

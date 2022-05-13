@@ -1,7 +1,7 @@
 <?php
   /**
+   * @param string|array|null $data
    * @param int $code
-   * @param string|null $message
    * @return void
    */
   function jsonResponse(string|array $data = null, int $code = 200): void
