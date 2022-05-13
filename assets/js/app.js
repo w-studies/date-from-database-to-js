@@ -268,7 +268,7 @@ const fetchJson = async (url, data, method = 'POST') => {
 }
 
 const generateButton = ({title, action, icon, classes = 'btn'}) => {
-  return `<button class='btn ${classes}' title='Ver ${title}' onclick='${action}'>${icon}</button>`
+  return `<button class='btn ${classes}' title='${title}' onclick='${action}'>${icon}</button>`
 }
 
 /**
